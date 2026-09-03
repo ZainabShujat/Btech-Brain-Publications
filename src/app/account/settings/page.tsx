@@ -29,6 +29,10 @@ export default function AccountSettingsPage() {
         </p>
       </div>
 
+      <div className="p-4 bg-amber-50/60 border border-amber-200/80 rounded-sm text-xs text-amber-900 leading-relaxed">
+        <strong>Demo Profile Notice:</strong> This account profile is pre-configured for demonstration purposes. Live multi-user authentication (NextAuth / OAuth) will be enabled in future releases as the platform transitions from an internship project to a full-scale independent press.
+      </div>
+
       <form onSubmit={handleSubmit} className="p-6 bg-white border border-[#E7E5E4] rounded-sm shadow-editorial space-y-5">
         <div className="space-y-4">
           <div>

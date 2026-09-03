@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Container } from '@/components/layout/Container';
 import { useAuth } from '@/hooks/useAuth';
-import { BookOpen, Package, CreditCard, Settings, User, ShieldCheck } from 'lucide-react';
+import { BookOpen, Package, CreditCard, Settings, User, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function AccountLayout({
@@ -26,7 +26,7 @@ export default function AccountLayout({
   ];
 
   return (
-    <div className="py-10 space-y-8">
+    <div className="py-10 space-y-6">
       <Container>
         {/* Account Header */}
         <div className="pb-6 border-b border-[#E7E5E4] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -39,14 +39,28 @@ export default function AccountLayout({
                 <h1 className="font-serif text-2xl font-bold text-[#1C1917]">
                   {user ? user.name : 'Reader Portal'}
                 </h1>
-                <span className="text-[11px] font-mono uppercase px-2 py-0.5 bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] rounded-sm">
-                  {user?.role || 'Guest'}
+                <span className="text-[11px] font-mono uppercase px-2 py-0.5 bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A] rounded-sm font-semibold">
+                  Demo Account
+                </span>
+                <span className="text-[11px] font-mono uppercase px-2 py-0.5 bg-[#F3EFE6] text-[#57534E] border border-[#E7E5E4] rounded-sm">
+                  {user?.role || 'Subscriber'}
                 </span>
               </div>
               <p className="text-xs font-mono text-[#78716C] mt-0.5">
-                {user?.email || 'reader@btechbrain.pub'} · Member since June 2026
+                {user?.email || 'reader@btechbrain.pub'} · Sample Reader Persona
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Demo Account Info Banner */}
+        <div className="p-4 bg-[#F3EFE6] border border-[#E7E5E4] rounded-sm text-xs text-[#57534E] flex items-start gap-3">
+          <Info className="w-4 h-4 text-[#B45309] shrink-0 mt-0.5" />
+          <div className="space-y-0.5">
+            <strong className="text-[#1C1917] font-semibold">Simulated Demo Account</strong>
+            <p className="leading-relaxed">
+              You are currently viewing a pre-populated demo reader profile so you can test the <strong>Digital Library</strong>, reading progress sync, and simulated order fulfillment. This platform was built during an e-commerce web development internship and is under development as it grows into a live publication.
+            </p>
           </div>
         </div>
 

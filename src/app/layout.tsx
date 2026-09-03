@@ -8,6 +8,7 @@ import { CartDrawer } from '@/components/commerce/CartDrawer';
 import { CartProvider } from '@/context/CartContext';
 import { AuthProvider } from '@/context/AuthContext';
 import { SITE_CONFIG } from '@/lib/constants';
+import { Analytics } from '@vercel/analytics/next';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -73,6 +74,7 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
             <CartDrawer />
             <Footer />
+            <Analytics />
           </CartProvider>
         </AuthProvider>
       </body>
