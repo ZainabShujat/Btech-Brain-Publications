@@ -1,0 +1,354 @@
+// Prisma schema for Notes From a B.Tech Brain Publications
+// E-Commerce & Publishing Platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  READER
+  SUBSCRIBER
+  AUTHOR
+  ADMIN
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+}
+
+enum MagazineStatus {
+  PUBLISHED
+  UPCOMING
+  ARCHIVE
+}
+
+enum BookStatus {
+  PUBLISHED
+  COMING_SOON
+  PREVIEW_EDITION
+}
+
+enum ProductType {
+  MAGAZINE
+  BOOK
+  SUBSCRIPTION
+  PRINT_ISSUE
+}
+
+enum ProductFormat {
+  DIGITAL
+  PRINT
+  BUNDLE
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum SubscriptionTier {
+  MONTHLY
+  ANNUAL
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
+}
+
+model User {
+  id            String             @id @default(cuid())
+  email         String             @unique
+  name          String
+  role          Role               @default(READER)
+  avatar        String?
+  bio           String?
+  joinedDate    DateTime           @default(now())
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  orders        Order[]
+  subscriptions UserSubscription[]
+  libraryItems  LibraryItem[]
+  addresses     ShippingAddress[]
+
+  @@map("users")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  articles    Article[]
+
+  @@map("categories")
+}
+
+model Article {
+  id                 String           @id @default(cuid())
+  slug               String           @unique
+  title              String
+  subtitle           String
+  excerpt            String
+  content            String           @db.Text
+  coverImage         String?
+  readingTimeMinutes Int
+  publishedAt        DateTime         @default(now())
+  status             ArticleStatus    @default(PUBLISHED)
+  featured           Boolean          @default(false)
+  issueSlug          String?
+  tags               String[]         @default([])
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  categoryId         String
+  category           Category         @relation(fields: [categoryId], references: [id])
+
+  magazineArticles   MagazineArticle[]
+
+  @@map("articles")
+}
+
+model MagazineIssue {
+  id                 String            @id @default(cuid())
+  slug               String            @unique
+  issueNumber        Int
+  volumeNumber       Int               @default(1)
+  title              String
+  subtitle           String
+  description        String            @db.Text
+  coverImage         String
+  publicationDate    DateTime
+  season             String?
+  pageCount          Int
+  status             MagazineStatus    @default(PUBLISHED)
+  digitalPrice       Decimal           @db.Decimal(10, 2)
+  printPrice         Decimal?          @db.Decimal(10, 2)
+  isAvailableInPrint Boolean           @default(true)
+  pdfDownloadUrl     String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  articles           MagazineArticle[]
+
+  @@map("magazine_issues")
+}
+
+model MagazineArticle {
+  id           String        @id @default(cuid())
+  magazineId   String
+  articleId    String
+  pageNumber   Int
+  summary      String
+
+  magazine     MagazineIssue @relation(fields: [magazineId], references: [id], onDelete: Cascade)
+  article      Article       @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([magazineId, articleId])
+  @@map("magazine_articles")
+}
+
+model Book {
+  id                 String            @id @default(cuid())
+  slug               String            @unique
+  title              String
+  subtitle           String
+  author             String            @default("Zainab Shujat")
+  description        String            @db.Text
+  longDescription    String            @db.Text
+  coverImage         String
+  genre              String
+  isbn               String?
+  pageCount          Int
+  publicationDate    DateTime
+  status             BookStatus        @default(PUBLISHED)
+  digitalPrice       Decimal           @db.Decimal(10, 2)
+  printPrice         Decimal?          @db.Decimal(10, 2)
+  formats            ProductFormat[]   @default([DIGITAL, PRINT])
+  sampleChapterText  String?           @db.Text
+  dimensions         String?
+  publisher          String            @default("Notes From a B.Tech Brain Press")
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  tableOfContents    BookChapter[]
+  reviews            BookReview[]
+
+  @@map("books")
+}
+
+model BookChapter {
+  id          String   @id @default(cuid())
+  bookId      String
+  number      Int
+  title       String
+  pageCount   Int
+  description String?
+
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@unique([bookId, number])
+  @@map("book_chapters")
+}
+
+model BookReview {
+  id          String   @id @default(cuid())
+  bookId      String
+  authorName  String
+  authorTitle String
+  rating      Int      @default(5)
+  comment     String   @db.Text
+  date        String
+
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@map("book_reviews")
+}
+
+model Product {
+  id           String           @id @default(cuid())
+  type         ProductType
+  title        String
+  slug         String           @unique
+  coverImage   String
+  description  String           @db.Text
+  contentRefId String           // References MagazineIssue.id or Book.id
+  featured     Boolean          @default(false)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  variants     ProductVariant[]
+  orderItems   OrderItem[]
+
+  @@map("products")
+}
+
+model ProductVariant {
+  id            String        @id @default(cuid())
+  productId     String
+  format        ProductFormat
+  name          String
+  price         Decimal       @db.Decimal(10, 2)
+  currency      String        @default("USD")
+  inStock       Boolean       @default(true)
+  stockQuantity Int           @default(100)
+  sku           String        @unique
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems    OrderItem[]
+
+  @@map("product_variants")
+}
+
+model Order {
+  id                 String           @id @default(cuid())
+  orderNumber        String           @unique
+  userId             String?
+  customerEmail      String
+  customerName       String
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  status             OrderStatus      @default(PENDING)
+  subtotal           Decimal          @db.Decimal(10, 2)
+  shippingFee        Decimal          @default(0) @db.Decimal(10, 2)
+  total              Decimal          @db.Decimal(10, 2)
+  isPhysicalDelivery Boolean          @default(false)
+  paymentMethod      String           @default("Stripe")
+  stripeSessionId    String?          @unique
+  stripePaymentId    String?
+
+  user               User?            @relation(fields: [userId], references: [id])
+  shippingAddress    ShippingAddress?
+  items              OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String          @id @default(cuid())
+  orderId    String
+  productId  String
+  variantId  String
+  title      String
+  format     ProductFormat
+  unitPrice  Decimal         @db.Decimal(10, 2)
+  quantity   Int             @default(1)
+  coverImage String
+  slug       String
+
+  order      Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product    Product         @relation(fields: [productId], references: [id])
+  variant    ProductVariant  @relation(fields: [variantId], references: [id])
+
+  @@map("order_items")
+}
+
+model ShippingAddress {
+  id         String   @id @default(cuid())
+  orderId    String?  @unique
+  userId     String?
+  fullName   String
+  street     String
+  city       String
+  state      String?
+  postalCode String
+  country    String   @default("United States")
+
+  order      Order?   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user       User?    @relation(fields: [userId], references: [id])
+
+  @@map("shipping_addresses")
+}
+
+model UserSubscription {
+  id                String             @id @default(cuid())
+  userId            String
+  tier              SubscriptionTier
+  status            SubscriptionStatus @default(ACTIVE)
+  startedAt         DateTime           @default(now())
+  renewsAt          DateTime
+  cancelAtPeriodEnd Boolean            @default(false)
+  price             Decimal            @db.Decimal(10, 2)
+  stripeSubId       String?            @unique
+
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_subscriptions")
+}
+
+model LibraryItem {
+  id                     String        @id @default(cuid())
+  userId                 String
+  title                  String
+  subtitle               String?
+  type                   String        // 'magazine' | 'book'
+  coverImage             String
+  acquiredDate           DateTime      @default(now())
+  slug                   String
+  format                 String        @default("digital")
+  downloadUrl            String?
+  readingProgressPercent Int           @default(0)
+  lastReadDate           DateTime?
+
+  user                   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("library_items")
+}

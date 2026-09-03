@@ -1,0 +1,60 @@
+import { Order } from '@/lib/types';
+
+export const DEMO_ORDERS: Order[] = [
+  {
+    id: 'ord_1082',
+    orderNumber: 'NBB-2026-1082',
+    userId: 'usr_zainab_reader',
+    createdAt: '2026-06-20T14:22:00Z',
+    status: 'delivered',
+    isPhysicalDelivery: true,
+    subtotal: 34,
+    shippingFee: 5,
+    total: 39,
+    paymentMethod: 'Credit Card (Stripe ending in 4242)',
+    shippingAddress: {
+      fullName: 'Elena Rostova',
+      street: '442 Meridian St, Apt 3B',
+      city: 'Cambridge',
+      state: 'MA',
+      postalCode: '02139',
+      country: 'United States',
+    },
+    items: [
+      {
+        id: 'oi_01',
+        title: 'The Architecture of Figuring Things Out',
+        format: 'print',
+        productType: 'book',
+        unitPrice: 34,
+        quantity: 1,
+        coverImage: '/images/covers/book-01.jpg',
+        slug: 'the-architecture-of-figuring-things-out',
+      },
+    ],
+  },
+  {
+    id: 'ord_1044',
+    orderNumber: 'NBB-2026-1044',
+    userId: 'usr_zainab_reader',
+    createdAt: '2026-06-12T09:10:00Z',
+    status: 'paid',
+    isPhysicalDelivery: false,
+    subtotal: 54,
+    shippingFee: 0,
+    total: 54,
+    paymentMethod: 'Credit Card (Stripe ending in 4242)',
+    items: [
+      {
+        id: 'oi_02',
+        title: 'Annual Patron Subscription (1 Year)',
+        format: 'digital',
+        productType: 'subscription',
+        unitPrice: 54,
+        quantity: 1,
+        coverImage: '/images/covers/magazine-01.jpg',
+        slug: 'annual-patron',
+      },
+    ],
+  },
+];
