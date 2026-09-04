@@ -10,8 +10,9 @@ Designed and developed by **Zainab Shujat** during an e-commerce web development
 
 ## 📌 Project Overview & Disclaimer
 
-- **Authentic Content:** Essay archives and articles are sourced directly from the live publication at [btechbrain.zainabshujat.dev](https://btechbrain.zainabshujat.dev) and [zainabshujat.dev](https://zainabshujat.dev).
+- **Authentic & Original Content:** Essay archives, technical writings, editorial concepts, and articles are original intellectual works sourced directly from the author's live publications at [btechbrain.zainabshujat.dev](https://btechbrain.zainabshujat.dev) and [zainabshujat.dev](https://zainabshujat.dev). All rights are strictly reserved.
 - **Demonstration E-Commerce Layer:** Books, monthly magazine issues, prices, reviews, customer orders, and physical fulfillment are **placeholder/demo models** designed to demonstrate full-stack e-commerce architecture, cart state management, checkout workflows, database normalization, and reader library fulfillment.
+- **Proprietary Notice:** This project serves as a showcase of engineering and publishing design. Unauthorized cloning, commercial re-use, scraping, or publishing under another identity is strictly prohibited.
 
 ---
 
@@ -54,13 +55,15 @@ Designed and developed by **Zainab Shujat** during an e-commerce web development
 
 | Layer | Technology |
 |---|---|
-| **Framework** | [Next.js 16 (App Router)](https://nextjs.org/) + React 19 Server Components |
-| **Language** | [TypeScript](https://www.typescriptlang.org/) |
-| **Styling** | [Tailwind CSS](https://tailwindcss.com/) with bespoke editorial design tokens |
-| **Database** | [Neon PostgreSQL](https://neon.tech/) (Serverless) |
-| **ORM** | [Prisma v6](https://www.prisma.io/) |
-| **Icons & Typography** | [Lucide React](https://lucide.dev/), Google Fonts (*Playfair Display*, *Inter*, *JetBrains Mono*) |
-| **Payments** | Stripe API & Webhook listeners (with instant demo checkout fallback) |
+| **Framework & Core** | [Next.js 16 (App Router)](https://nextjs.org/) + [React 19](https://react.dev/) Server Components |
+| **Language** | [TypeScript 5](https://www.typescriptlang.org/) |
+| **Styling & Design** | [Tailwind CSS v4](https://tailwindcss.com/) + Google Fonts (*Playfair Display*, *Inter*, *JetBrains Mono*) |
+| **Icons** | [Lucide React](https://lucide.dev/) |
+| **Database** | [PostgreSQL](https://www.postgresql.org/) ([Neon Serverless](https://neon.tech/)) |
+| **ORM** | [Prisma v6](https://www.prisma.io/) (15 relational schema models) |
+| **Payments & Commerce** | [Stripe](https://stripe.com/) (`@stripe/stripe-js`) & webhooks + instant demo checkout fallback |
+| **State Management** | React Context (`CartContext`, `AuthContext`) + LocalStorage persistence |
+| **Analytics & Telemetry** | Google Analytics 4 (`gtag.js`) + [Vercel Analytics](https://vercel.com/analytics) |
 
 ---
 
@@ -205,6 +208,10 @@ npm start
 
 ---
 
-## 📄 License
+## 🔒 Copyright & Intellectual Property
 
-This project is open source and available under the [MIT License](LICENSE).
+**© 2024–2026 Zainab Shujat / Notes From a B.Tech Brain Publications. All Rights Reserved.**
+
+- **Proprietary Editorial Content:** All essays, articles, magazine editions, monograph texts, brand identity, typography systems, and original written works contained within this repository are the exclusive intellectual property of **Zainab Shujat**.
+- **No Unauthorized Cloning or Redistribution:** You may **not** copy, clone, scrape, republish, mirror, distribute, or host this codebase, design system, or written catalog for commercial, public, or derivative publishing purposes without explicit prior written authorization from the author.
+- **Permitted Use:** This repository is made public strictly for **portfolio demonstration, code inspection, and hiring evaluation**. Any unauthorized commercial reproduction, plagiarized publishing, or redistribution will be subject to applicable copyright laws.
